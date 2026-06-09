@@ -1,0 +1,250 @@
+If you're building with Flutter and using AI to generate screens/features incrementally, the best approach is to give the AI **focused follow-up prompts** rather than asking for the entire app at once.
+
+Here are high-quality follow-up prompts you can use:
+
+---
+
+## 1. Dashboard Screen
+
+> Create a Flutter dashboard screen for a personal finance app using Material 3. The dashboard should include:
+>
+> * App bar with user greeting
+> * Total balance card
+> * Income, expenses, and savings summary cards
+> * Monthly budget progress indicator
+> * Spending insights section
+> * Recent transactions list
+> * Responsive layout for mobile and tablet
+> * Clean fintech-inspired UI
+>
+> Use reusable widgets and mock data.
+
+---
+
+## 2. Transaction Management
+
+> Create a complete transaction management feature in Flutter.
+>
+> Requirements:
+>
+> * Add transaction screen
+> * Edit transaction screen
+> * Delete transaction functionality
+> * Category selection dropdown
+> * Date picker
+> * Amount input with validation
+> * Notes field
+> * State management using Riverpod
+> * Clean architecture folder structure
+
+---
+
+## 3. Spending Categories
+
+> Create a category management module for Flutter.
+>
+> Features:
+>
+> * Create custom categories
+> * Edit categories
+> * Delete categories
+> * Category icons
+> * Category colors
+> * Grid view layout
+> * Search categories
+> * Material 3 design
+
+---
+
+## 4. Budget Goals
+
+> Create a budget planning feature.
+>
+> Requirements:
+>
+> * Set monthly budget per category
+> * Budget progress bars
+> * Remaining budget calculations
+> * Overspending alerts
+> * Budget summary cards
+> * Local storage using Hive
+> * Responsive Flutter UI
+
+---
+
+## 5. Charts & Analytics
+
+> Create an analytics screen for a budgeting app using Flutter and fl_chart.
+>
+> Include:
+>
+> * Pie chart for category spending
+> * Line chart for monthly trends
+> * Bar chart for budget vs actual spending
+> * Date range filter
+> * Interactive chart tooltips
+> * Dark mode support
+
+---
+
+## 6. Database Architecture
+
+> Design a scalable local database architecture for a Flutter budgeting application using Hive.
+>
+> Include:
+>
+> * Models
+> * TypeAdapters
+> * Repository pattern
+> * CRUD operations
+> * Data relationships
+> * Migration strategy
+
+---
+
+## 7. Riverpod State Management
+
+> Create a complete Riverpod architecture for a personal finance app.
+>
+> Include:
+>
+> * Providers
+> * StateNotifiers
+> * Repository layer
+> * Dependency injection
+> * Transaction state management
+> * Budget state management
+> * Category state management
+
+---
+
+## 8. Home Screen Redesign
+
+> Redesign the home screen of a budgeting app to look like a premium fintech product.
+>
+> Include:
+>
+> * Modern card layouts
+> * Gradient balance card
+> * Spending insights
+> * Budget tracking
+> * Recent activity
+> * Smooth animations
+> * Material 3 components
+
+---
+
+## 9. Financial Insights AI
+
+> Create an AI-powered financial insights feature.
+>
+> Generate:
+>
+> * Spending pattern analysis
+> * Budget recommendations
+> * Overspending warnings
+> * Savings suggestions
+> * Monthly financial summary
+>
+> Design the Flutter UI and data model required.
+
+---
+
+## 10. Authentication Flow
+
+> Create a complete Flutter authentication flow.
+>
+> Include:
+>
+> * Login screen
+> * Register screen
+> * Forgot password
+> * Biometric authentication
+> * Remember me functionality
+> * Form validation
+> * Material 3 design
+
+---
+
+## 11. Premium Feature Prompt
+
+> Add premium features to the budgeting app.
+>
+> Include:
+>
+> * Financial goals
+> * Debt tracking
+> * Investment tracking
+> * Net worth dashboard
+> * Subscription management
+> * Premium UI design
+> * Upgrade screen
+
+---
+
+## 12. Full App Architecture Prompt
+
+> Act as a senior Flutter architect.
+>
+> Design a production-ready budgeting application using:
+>
+> * Flutter
+> * Riverpod
+> * GoRouter
+> * Hive
+> * Clean Architecture
+> * Material 3
+>
+> Generate:
+>
+> * Folder structure
+> * Feature modules
+> * Data models
+> * State management
+> * Navigation architecture
+> * Theme architecture
+> * Reusable widgets
+> * Scalability recommendations
+
+---
+
+## 13. UI Polish Prompt
+
+> Review my budgeting app UI as a senior product designer.
+>
+> Suggest improvements for:
+>
+> * Visual hierarchy
+> * Typography
+> * Color system
+> * Card design
+> * Navigation
+> * Empty states
+> * Error states
+> * Accessibility
+> * Material 3 compliance
+>
+> Provide Flutter implementation recommendations.
+
+---
+
+## 14. Generate a Complete Screen
+
+> Generate a production-ready Flutter screen.
+>
+> Requirements:
+>
+> * Fully responsive
+> * Material 3
+> * Dark mode support
+> * Riverpod integration
+> * Reusable widgets
+> * Proper spacing system
+> * Loading states
+> * Error states
+> * Empty states
+> * Well-documented code
+>
+> Return complete code without placeholders.
+
+This last prompt is particularly useful because it pushes the AI to generate code that's much closer to production quality rather than a quick prototype.
