@@ -1,1 +1,227 @@
-\nimport 'package:flutter/material.dart';\n\nclass DashboardScreen extends StatelessWidget {\n  const DashboardScreen({super.key});\n\n  @override\n  Widget build(BuildContext context) {\n    final theme = Theme.of(context);\n    final colorScheme = theme.colorScheme;\n\n    return Scaffold(\n      appBar: AppBar(\n        title: const Text('Dashboard'),\n        actions: [\n          IconButton(\n            onPressed: () {},\n            icon: const Icon(Icons.notifications_outlined),\n            tooltip: 'Notifications',\n          ),\n        ],\n      ),\n      body: ListView(\n        padding: const EdgeInsets.all(16.0),\n        children: [\n          _buildBalanceCard(context, colorScheme),\n          const SizedBox(height: 24),\n          _buildSectionHeader(context, 'Budgets'),\n          const SizedBox(height: 16),\n          _buildBudgets(context, colorScheme),\n          const SizedBox(height: 24),\n          _buildSectionHeader(context, 'Recent Activity'),\n          const SizedBox(height: 16),\n          _buildRecentActivity(context, colorScheme),\n        ],\n      ),\n    );\n  }\n\n  Widget _buildBalanceCard(BuildContext context, ColorScheme colorScheme) {\n    return Container(\n      padding: const EdgeInsets.all(24),\n      decoration: BoxDecoration(\n        gradient: LinearGradient(\n          colors: [colorScheme.primary, colorScheme.tertiary],\n          begin: Alignment.topLeft,\n          end: Alignment.bottomRight,\n        ),\n        borderRadius: BorderRadius.circular(16),\n        boxShadow: [\n          BoxShadow(\n            color: colorScheme.primary.withOpacity(0.3),\n            blurRadius: 10,\n            offset: const Offset(0, 5),\n          ),\n        ],\n      ),\n      child: Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: [\n          Text(\n            'Current Balance',\n            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: colorScheme.onPrimary),\n          ),\n          const SizedBox(height: 8),\n          Text(\n            '\\\$12,345.67',\n            style: Theme.of(context).textTheme.displayLarge?.copyWith(color: colorScheme.onPrimary),\n          ),\n        ],\n      ),\n    );\n  }\n\n  Widget _buildSectionHeader(BuildContext context, String title) {\n    return Text(\n      title,\n      style: Theme.of(context).textTheme.headlineMedium,\n    );\n  }\n\n  Widget _buildBudgets(BuildContext context, ColorScheme colorScheme) {\n    // Replace with actual data\n    final budgets = [\n      {'category': 'Groceries', 'spent': 250.0, 'total': 500.0, 'icon': Icons.shopping_cart},\n      {'category': 'Entertainment', 'spent': 150.0, 'total': 200.0, 'icon': Icons.movie},\n      {'category': 'Transport', 'spent': 80.0, 'total': 100.0, 'icon': Icons.directions_car},\n    ];\n\n    if (budgets.isEmpty) {\n      return _buildEmptyState(\n        context,\n        icon: Icons.pie_chart_outline,\n        message: 'No budgets created yet.',\n        suggestion: 'Create your first budget to start tracking your spending.',\n        buttonText: 'Create Budget',\n        onPressed: () {},\n      );\n    }\n\n    return Column(\n      children: budgets.map((budget) => _buildBudgetCard(context, colorScheme, budget)).toList(),\n    );\n  }\n\n  Widget _buildBudgetCard(BuildContext context, ColorScheme colorScheme, Map<String, dynamic> budget) {\n    final double progress = budget['spent'] / budget['total'];\n    return Card(\n      margin: const EdgeInsets.only(bottom: 16),\n      child: Padding(\n        padding: const EdgeInsets.all(16.0),\n        child: Column(\n          crossAxisAlignment: CrossAxisAlignment.start,\n          children: [\n            Row(\n              children: [\n                Icon(budget['icon'], color: colorScheme.primary),\n                const SizedBox(width: 16),\n                Text(budget['category'], style: Theme.of(context).textTheme.titleMedium),\n                const Spacer(),\n                Text('\\\$${budget['spent']} / \\\$${budget['total']}', style: Theme.of(context).textTheme.bodyMedium),\n              ],\n            ),\n            const SizedBox(height: 16),\n            LinearProgressIndicator(\n              value: progress,\n              backgroundColor: colorScheme.surfaceVariant,\n              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),\n              minHeight: 6,\n              borderRadius: BorderRadius.circular(3),\n            ),\n          ],\n        ),\n      ),\n    );\n  }\n\n  Widget _buildRecentActivity(BuildContext context, ColorScheme colorScheme) {\n    // Replace with actual data\n    final activities = [\n      {'name': 'Netflix Subscription', 'amount': -15.99, 'date': 'Today'},\n      {'name': 'Salary Deposit', 'amount': 2500.00, 'date': 'Yesterday'},\n      {'name': 'Coffee Shop', 'amount': -4.50, 'date': 'Yesterday'},\n    ];\n\n    if (activities.isEmpty) {\n      return _buildEmptyState(\n        context,\n        icon: Icons.receipt_long_outlined,\n        message: 'No transactions yet.',\n        suggestion: 'Add your first transaction to get started.',\n        buttonText: 'Add Transaction',\n        onPressed: () {},\n      );\n    }\n\n    return Card(\n      child: Column(\n        children: activities.map((activity) {\n          final isExpense = activity['amount']! < 0;\n          return ListTile(\n            leading: CircleAvatar(\n              backgroundColor: isExpense ? colorScheme.errorContainer : colorScheme.primaryContainer,\n              child: Icon(\n                isExpense ? Icons.arrow_downward : Icons.arrow_upward,\n                color: isExpense ? colorScheme.onErrorContainer : colorScheme.onPrimaryContainer,\n              ),\n            ),\n            title: Text(activity['name']! as String, style: Theme.of(context).textTheme.titleMedium),\n            subtitle: Text(activity['date']! as String, style: Theme.of(context).textTheme.bodyMedium),\n            trailing: Text(\n              '\\\$${activity['amount']!.abs().toStringAsFixed(2)}',\n              style: Theme.of(context).textTheme.titleMedium?.copyWith(\n                    color: isExpense ? colorScheme.error : Colors.green,\n                    fontWeight: FontWeight.bold,\n                  ),\n            ),\n          );\n        }).toList(),\n      ),\n    );\n  }\n\n  Widget _buildEmptyState(BuildContext context, {\n    required IconData icon,\n    required String message,\n    required String suggestion,\n    required String buttonText,\n    required VoidCallback onPressed,\n  }) {\n    return Card(\n      child: Padding(\n        padding: const EdgeInsets.all(32.0),\n        child: Center(\n          child: Column(\n            mainAxisAlignment: MainAxisAlignment.center,\n            children: [\n              Icon(\n                icon,\n                size: 60,\n                color: Theme.of(context).colorScheme.secondary,\n              ),\n              const SizedBox(height: 16),\n              Text(\n                message,\n                style: Theme.of(context).textTheme.headlineSmall,\n                textAlign: TextAlign.center,\n              ),\n              const SizedBox(height: 8),\n              Text(\n                suggestion,\n                style: Theme.of(context).textTheme.bodyMedium,\n                textAlign: TextAlign.center,\n              ),\n              const SizedBox(height: 24),\n              FilledButton.icon(\n                onPressed: onPressed,\n                icon: const Icon(Icons.add),\n                label: Text(buttonText),\n              ),\n            ],\n          ),\n        ),\n      ),\n    );\n  }\n}\n
+
+import 'package:flutter/material.dart';
+
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_outlined),
+            tooltip: 'Notifications',
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          _buildBalanceCard(context, colorScheme),
+          const SizedBox(height: 24),
+          _buildSectionHeader(context, 'Budgets'),
+          const SizedBox(height: 16),
+          _buildBudgets(context, colorScheme),
+          const SizedBox(height: 24),
+          _buildSectionHeader(context, 'Recent Activity'),
+          const SizedBox(height: 16),
+          _buildRecentActivity(context, colorScheme),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBalanceCard(BuildContext context, ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [colorScheme.primary, colorScheme.tertiary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Current Balance',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: colorScheme.onPrimary),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '\$12,345.67',
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(color: colorScheme.onPrimary),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.headlineMedium,
+    );
+  }
+
+  Widget _buildBudgets(BuildContext context, ColorScheme colorScheme) {
+    // Replace with actual data
+    final budgets = [
+      {'category': 'Groceries', 'spent': 250.0, 'total': 500.0, 'icon': Icons.shopping_cart},
+      {'category': 'Entertainment', 'spent': 150.0, 'total': 200.0, 'icon': Icons.movie},
+      {'category': 'Transport', 'spent': 80.0, 'total': 100.0, 'icon': Icons.directions_car},
+    ];
+
+    if (budgets.isEmpty) {
+      return _buildEmptyState(
+        context,
+        icon: Icons.pie_chart_outline,
+        message: 'No budgets created yet.',
+        suggestion: 'Create your first budget to start tracking your spending.',
+        buttonText: 'Create Budget',
+        onPressed: () {},
+      );
+    }
+
+    return Column(
+      children: budgets.map((budget) => _buildBudgetCard(context, colorScheme, budget)).toList(),
+    );
+  }
+
+  Widget _buildBudgetCard(BuildContext context, ColorScheme colorScheme, Map<String, dynamic> budget) {
+    final double progress = budget['spent'] / budget['total'];
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(budget['icon'], color: colorScheme.primary),
+                const SizedBox(width: 16),
+                Text(budget['category'], style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                Text('\$${budget['spent']} / \$${budget['total']}', style: Theme.of(context).textTheme.bodyMedium),
+              ],
+            ),
+            const SizedBox(height: 16),
+            LinearProgressIndicator(
+              value: progress,
+              backgroundColor: colorScheme.surfaceVariant,
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+              minHeight: 6,
+              borderRadius: BorderRadius.circular(3),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentActivity(BuildContext context, ColorScheme colorScheme) {
+    // Replace with actual data
+    final activities = [
+      {'name': 'Netflix Subscription', 'amount': -15.99, 'date': 'Today'},
+      {'name': 'Salary Deposit', 'amount': 2500.00, 'date': 'Yesterday'},
+      {'name': 'Coffee Shop', 'amount': -4.50, 'date': 'Yesterday'},
+    ];
+
+    if (activities.isEmpty) {
+      return _buildEmptyState(
+        context,
+        icon: Icons.receipt_long_outlined,
+        message: 'No transactions yet.',
+        suggestion: 'Add your first transaction to get started.',
+        buttonText: 'Add Transaction',
+        onPressed: () {},
+      );
+    }
+
+    return Card(
+      child: Column(
+        children: activities.map((activity) {
+          final isExpense = activity['amount']! < 0;
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundColor: isExpense ? colorScheme.errorContainer : colorScheme.primaryContainer,
+              child: Icon(
+                isExpense ? Icons.arrow_downward : Icons.arrow_upward,
+                color: isExpense ? colorScheme.onErrorContainer : colorScheme.onPrimaryContainer,
+              ),
+            ),
+            title: Text(activity['name']! as String, style: Theme.of(context).textTheme.titleMedium),
+            subtitle: Text(activity['date']! as String, style: Theme.of(context).textTheme.bodyMedium),
+            trailing: Text(
+              '\$${activity['amount']!.abs().toStringAsFixed(2)}',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: isExpense ? colorScheme.error : Colors.green,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, {
+    required IconData icon,
+    required String message,
+    required String suggestion,
+    required String buttonText,
+    required VoidCallback onPressed,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 60,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                message,
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                suggestion,
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                onPressed: onPressed,
+                icon: const Icon(Icons.add),
+                label: Text(buttonText),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
