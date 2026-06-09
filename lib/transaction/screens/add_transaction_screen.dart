@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:myapp/transaction/models/categories.dart';
-import 'package:myapp/transaction/models/transaction_model.dart';
+import 'package:myapp/category_screen.dart';
 import 'package:myapp/transaction/notifiers/transaction_notifier.dart';
-import 'package:uuid/uuid.dart';
 
-class AddTransactionScreen extends ConsumerWidget {
+class AddTransactionScreen extends ConsumerStatefulWidget {
   const AddTransactionScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final _formKey = GlobalKey<FormState>();
-    final _titleController = TextEditingController();
-    final _amountController = TextEditingController();
-    final _notesController = TextEditingController();
-    FinancialCategory? _selectedCategory;
-    DateTime? _selectedDate;
+  ConsumerState<AddTransactionScreen> createState() => _AddTransactionScreenState();
+}
+
+class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
+  String? _selectedCategoryId;
+
+  @override
+  Widget build(BuildContext context) {
+    final categories = ref.watch(categoryProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Transaction'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               TextFormField(
@@ -51,18 +55,20 @@ class AddTransactionScreen extends ConsumerWidget {
                   return null;
                 },
               ),
-              DropdownButtonFormField<FinancialCategory>(
-                value: _selectedCategory,
+              DropdownButtonFormField<String>(
+                value: _selectedCategoryId,
+                hint: const Text('Select Category'),
                 items: categories.map((category) {
-                  return DropdownMenuItem<FinancialCategory>(
-                    value: category,
+                  return DropdownMenuItem(
+                    value: category.id,
                     child: Text(category.name),
                   );
                 }).toList(),
                 onChanged: (value) {
-                  _selectedCategory = value;
+                  setState(() {
+                    _selectedCategoryId = value;
+                  });
                 },
-                decoration: const InputDecoration(labelText: 'Category'),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select a category';
@@ -70,37 +76,43 @@ class AddTransactionScreen extends ConsumerWidget {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _notesController,
-                decoration: const InputDecoration(labelText: 'Notes'),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('Date: ${_selectedDate.toLocal()}'.split(' ')[0]),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _selectedDate = pickedDate;
+                        });
+                      }
+                    },
+                    child: const Text('Select Date'),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  final selectedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime.now(),
-                  );
-                  _selectedDate = selectedDate;
-                },
-                child: const Text('Select Date'),
-              ),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    final newTransaction = Transaction(
-                      id: const Uuid().v4(),
-                      title: _titleController.text,
-                      amount: double.parse(_amountController.text),
-                      date: _selectedDate ?? DateTime.now(),
-                      category: _selectedCategory!,
-                    );
-                    ref.read(transactionProvider.notifier).addTransaction(newTransaction);
+                    ref.read(transactionProvider.notifier).addTransaction(
+                          _titleController.text,
+                          double.parse(_amountController.text),
+                          _selectedDate,
+                          _selectedCategoryId!,
+                        );
                     Navigator.of(context).pop();
                   }
                 },
-                child: const Text('Save'),
+                child: const Text('Add'),
               ),
             ],
           ),

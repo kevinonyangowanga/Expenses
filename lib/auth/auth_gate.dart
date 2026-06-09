@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:myapp/auth/login_screen.dart';
 import 'package:myapp/transaction/screens/finance_dashboard_screen.dart';
 
 class AuthGate extends StatelessWidget {
@@ -14,9 +14,7 @@ class AuthGate extends StatelessWidget {
         if (snapshot.hasData) {
           return const FinanceDashboardScreen();
         } else {
-          return SignInScreen(
-            providers: [EmailAuthProvider()],
-          );
+          return const LoginScreen();
         }
       },
     );
