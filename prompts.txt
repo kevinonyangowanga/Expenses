@@ -16,52 +16,6 @@
 
 ---
 
-## 12. Full App Architecture Prompt
-
-> Act as a senior Flutter architect.
->
-> Design a production-ready budgeting application using:
->
-> * Flutter
-> * Riverpod
-> * GoRouter
-> * Hive
-> * Clean Architecture
-> * Material 3
->
-> Generate:
->
-> * Folder structure
-> * Feature modules
-> * Data models
-> * State management
-> * Navigation architecture
-> * Theme architecture
-> * Reusable widgets
-> * Scalability recommendations
-
----
-
-## 13. UI Polish Prompt
-
-> Review my budgeting app UI as a senior product designer.
->
-> Suggest improvements for:
->
-> * Visual hierarchy
-> * Typography
-> * Color system
-> * Card design
-> * Navigation
-> * Empty states
-> * Error states
-> * Accessibility
-> * Material 3 compliance
->
-> Provide Flutter implementation recommendations.
-
----
-
 ## 14. Generate a Complete Screen
 
 > Generate a production-ready Flutter screen.

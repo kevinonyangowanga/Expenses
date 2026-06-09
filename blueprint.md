@@ -1,30 +1,176 @@
+# Budgeting App Blueprint
 
-# Project Blueprint
+## 1. Overview
 
-## Overview
+This document outlines the architectural design and implementation plan for a production-ready Flutter budgeting application. The goal is to create a scalable, maintainable, and high-performance application using modern best practices.
 
-This is a financial tracking and budgeting application built with Flutter and Riverpod. The application allows users to track their income and expenses, create budgets, and monitor their spending habits. The application uses a simple and intuitive interface to make it easy for users to manage their finances.
+**Core Technologies:**
 
-## Style and Design
+*   **UI Framework:** Flutter with Material 3
+*   **State Management:** Riverpod
+*   **Navigation:** GoRouter
+*   **Local Storage:** Hive
+*   **Architecture:** Clean Architecture (Feature-First)
 
-- **Theming:** The application supports both light and dark themes, and users can toggle between them. The theme is implemented using `provider` and `google_fonts` for a modern and consistent look and feel.
+## 2. Architecture: Clean Architecture
 
-## Features
+The application will be structured into three main layers:
 
-- **Authentication:** Users can create an account and log in using email and password, with biometric authentication as an alternative.
-- **Finance Dashboard:** A central dashboard to view financial summaries.
-- **Transaction Management:** Users can add, edit, and delete income and expense transactions.
-- **Budgeting:** Users can create and manage budgets for different spending categories.
-- **Search Functionality:** Users can search for transactions by title in the finance dashboard.
-- **Reports Screen:** A new screen that provides users with a summary of their spending habits over a selected period of time.
-- **Spending Bar Chart:** The "Reports" screen includes a bar chart that shows the user's spending by category.
+*   **Presentation:** Contains UI (Screens/Widgets) and state management (Riverpod Providers). This layer depends on the Domain layer.
+*   **Domain:** The core business logic, containing Entities (business objects) and Use Cases (interactors). This layer has no dependencies on other layers.
+*   **Data:** Responsible for data persistence and retrieval. It implements repositories defined in the Domain layer and uses data sources like Hive or a remote API. This layer depends on the Domain layer.
 
-## Premium Features
+### **Feature-First Folder Structure**
 
-- **Financial Goals:** Users can set and track their financial goals.
-- **Debt Tracking:** Users can track their debts and create a plan to pay them off.
-- **Investment Tracking:** Users can track their investments and monitor their performance.
-- **Net Worth Dashboard:** A dashboard that provides a complete overview of the user's net worth.
-- **Subscription Management:** Users can track their subscriptions and get reminders for upcoming payments.
-- **Premium UI Design:** A more polished and modern user interface.
-- **Upgrade Screen:** A screen that allows users to upgrade to the premium version of the app.
+The project is organized by feature, with each feature having its own `presentation`, `domain`, and `data` subdirectories.
+
+```
+lib/
+├── src/
+│   ├── core/                  # Core utilities, services, and app-wide logic
+│   │   ├── api/               # API client configuration (if any)
+│   │   ├── error/             # Custom exception and failure classes
+│   │   ├── navigation/        # GoRouter configuration
+│   │   ├── theme/             # App-wide theme data and providers
+│   │   └── usecases/          # Core use cases (e.g., UseCase with parameters)
+│   │
+│   ├── features/              # Feature modules
+│   │   ├── auth/              # Authentication feature
+│   │   │   ├── data/
+│   │   │   ├── domain/
+│   │   │   └── presentation/
+│   │   │
+│   │   ├── budget/            # Budgeting feature
+│   │   │   ├── data/
+│   │   │   ├── domain/
+│   │   │   └── presentation/
+│   │   │
+│   │   ├── dashboard/         # Home/Dashboard screen
+│   │   │   └── presentation/
+│   │   │
+│   │   └── transactions/      # Transactions feature
+│   │       ├── data/
+│   │       ├── domain/
+│   │       └── presentation/
+│   │
+│   └── shared/                # Shared widgets, constants, and extensions
+│       ├── constants/
+│       ├── widgets/
+│       └── extensions/
+│
+├── main.dart                  # App entry point
+└── app.dart                     # MaterialApp widget
+```
+
+## 3. Data Models & Persistence (Hive)
+
+We will use **Hive** for local, on-device data storage. Data models will be created as `HiveObject`s to enable seamless persistence.
+
+**Example Transaction Model:**
+
+```dart
+// lib/src/features/transactions/data/models/transaction_model.dart
+import 'package:hive/hive.dart';
+
+part 'transaction_model.g.dart';
+
+@HiveType(typeId: 0)
+class TransactionModel extends HiveObject {
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
+  final String description;
+
+  @HiveField(2)
+  final double amount;
+
+  @HiveField(3)
+  final DateTime date;
+
+  @HiveField(4)
+  final String categoryId;
+
+  TransactionModel({
+    required this.id,
+    required this.description,
+    required this.amount,
+    required this.date,
+    required this.categoryId,
+  });
+}
+```
+
+## 4. State Management (Riverpod)
+
+**Riverpod** will be used for both dependency injection and state management.
+
+*   `Provider`: To provide repository implementations to the domain layer.
+*   `FutureProvider`: For handling asynchronous operations like fetching data.
+*   `StateNotifierProvider`: To manage the state of UI screens, exposing a `StateNotifier` that holds the UI state.
+
+## 5. Navigation (GoRouter)
+
+**GoRouter** will handle all routing declaratively.
+
+**Router Configuration:**
+
+```dart
+// lib/src/core/navigation/app_router.dart
+final GoRouter router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const DashboardScreen(),
+    ),
+    GoRoute(
+      path: '/transactions',
+      builder: (context, state) => const TransactionsScreen(),
+      routes: [
+        GoRoute(
+          path: ':id', // e.g., /transactions/xyz
+          builder: (context, state) {
+            final id = state.pathParameters['id']!;
+            return TransactionDetailScreen(transactionId: id);
+          },
+        ),
+      ]
+    ),
+    // ... other routes
+  ],
+  // ... error handling and redirects
+);
+```
+
+## 6. Theme Architecture (Material 3)
+
+A centralized theme will be created in `lib/src/core/theme`.
+
+*   `theme_provider.dart`: A `ChangeNotifier` to toggle between light and dark modes.
+*   `app_theme.dart`: Defines `ThemeData` for both light and dark modes using `ColorScheme.fromSeed` for Material 3 compliance. It will also contain custom text themes and component themes.
+
+## 7. Scalability Recommendations
+
+*   **Modularity:** The feature-first structure allows teams to work on different features in isolation.
+*   **Abstraction:** The use of repositories and abstract data sources allows for easy swapping of implementations (e.g., moving from Hive to a cloud backend) without affecting the UI.
+*   **Testing:** The separation of concerns makes the app highly testable. Unit tests for the domain layer, widget tests for the presentation layer, and integration tests can be written easily.
+*   **Reusable Components:** Building a library of shared widgets in `lib/src/shared/widgets` will speed up development and ensure UI consistency.
+
+## 8. Implementation Plan
+
+1.  **Finalize Folder Structure:** Create all the necessary directories outlined above.
+2.  **Setup Core Components:**
+    *   Implement GoRouter configuration.
+    *   Implement Material 3 Theme and ThemeProvider.
+    *   Define base classes for UseCases and Errors.
+3.  **Implement Auth Feature:**
+    *   Create data models, repositories, and use cases for authentication.
+    *   Build the authentication screen.
+4.  **Implement Transactions Feature:**
+    *   Set up Hive and the Transaction data model.
+    *   Implement repositories and use cases for CRUD operations on transactions.
+    *   Build the transactions list and detail screens.
+5.  **Build Dashboard:**
+    *   Create the main dashboard screen that presents an overview of budgets and recent transactions.
+
+This structured approach will ensure a robust and scalable foundation for the budgeting app.

@@ -1,13 +1,15 @@
-class FinancialInsight {
+class Transaction {
   final String id;
   final String title;
-  final String summary;
+  final double amount;
+  final String category;
   final DateTime date;
 
-  FinancialInsight({
+  Transaction({
     required this.id,
     required this.title,
-    required this.summary,
+    required this.amount,
+    required this.category,
     required this.date,
   });
 }
