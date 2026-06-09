@@ -14,28 +14,6 @@
 > * Smooth animations
 > * Material 3 components
 
----
-
-## 14. Generate a Complete Screen
-
-> Generate a production-ready Flutter screen.
->
-> Requirements:
->
-> * Fully responsive
-> * Material 3
-> * Dark mode support
-> * Riverpod integration
-> * Reusable widgets
-> * Proper spacing system
-> * Loading states
-> * Error states
-> * Empty states
-> * Well-documented code
->
-> Return complete code without placeholders.
-
-This last prompt is particularly useful because it pushes the AI to generate code that's much closer to production quality rather than a quick prototype.
 
 
 

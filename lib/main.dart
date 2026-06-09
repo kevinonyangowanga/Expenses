@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:personal_finance_app/app.dart';
-import 'package:personal_finance_app/core/theme/theme_provider.dart';
+import 'package:myapp/app.dart';
+import 'package:myapp/core/theme/theme_provider.dart';
 
 void main() {
   runApp(

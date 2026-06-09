@@ -2,9 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:personal_finance_app/core/theme/theme_provider.dart';
-import 'package:personal_finance_app/core/routing/app_router.dart';
-
+import 'package:myapp/core/theme/theme_provider.dart';
+import 'package:myapp/features/home/presentation/screens/home_screen.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -13,12 +12,13 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return MaterialApp.router(
+        return MaterialApp(
           title: 'Personal Finance App',
           theme: themeProvider.lightTheme,
           darkTheme: themeProvider.darkTheme,
           themeMode: themeProvider.themeMode,
-          routerConfig: AppRouter.router,
+          home: const HomeScreen(),
+          debugShowCheckedModeBanner: false,
         );
       },
     );
