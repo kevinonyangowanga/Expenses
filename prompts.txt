@@ -16,22 +16,6 @@
 
 ---
 
-## 11. Premium Feature Prompt
-
-> Add premium features to the budgeting app.
->
-> Include:
->
-> * Financial goals
-> * Debt tracking
-> * Investment tracking
-> * Net worth dashboard
-> * Subscription management
-> * Premium UI design
-> * Upgrade screen
-
----
-
 ## 12. Full App Architecture Prompt
 
 > Act as a senior Flutter architect.

@@ -1,20 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/auth/providers/auth_provider.dart';
+import 'package:myapp/auth/screens/forgot_password_screen.dart';
+import 'package:myapp/auth/screens/register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _rememberMe = false;
 
   @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  void _loadSavedCredentials() async {
+    final authService = ref.read(authenticationServiceProvider);
+    final credentials = await authService.getSavedCredentials();
+    if (credentials['email'] != null) {
+      setState(() {
+        _emailController.text = credentials['email']!;
+        _passwordController.text = credentials['password']!;
+        _rememberMe = true;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final authNotifier = ref.watch(authNotifierProvider.notifier);
+    final authState = ref.watch(authNotifierProvider);
+
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next.status == AuthStatus.error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.errorMessage ?? 'An error occurred')),
+        );
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
@@ -68,32 +101,56 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Handle login
-                  }
-                },
-                child: const Text('Login'),
-              ),
+              if (authState.status == AuthStatus.loading)
+                const CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await authNotifier.signInWithEmailAndPassword(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                      if (_rememberMe) {
+                        await ref.read(authenticationServiceProvider).saveCredentials(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
+                      } else {
+                        await ref.read(authenticationServiceProvider).clearSavedCredentials();
+                      }
+                    }
+                  },
+                  child: const Text('Login'),
+                ),
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  // Handle forgot password
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPasswordScreen(),
+                    ),
+                  );
                 },
                 child: const Text('Forgot password?'),
               ),
               const SizedBox(height: 16),
               IconButton(
                 onPressed: () {
-                  // Handle biometric authentication
+                  authNotifier.authenticateWithBiometrics();
                 },
                 icon: const Icon(Icons.fingerprint, size: 48),
               ),
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  // Navigate to register screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterScreen(),
+                    ),
+                  );
                 },
                 child: const Text("Don't have an account? Register"),
               ),

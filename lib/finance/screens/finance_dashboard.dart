@@ -1,59 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/analytics/screens/analytics_screen.dart';
-import 'package:myapp/budget/screens/budget_screen.dart';
-import 'package:myapp/insights/screens/insights_screen.dart';
-import 'package:myapp/transaction/screens/transaction_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/auth/providers/auth_provider.dart';
 
-class FinanceDashboard extends StatefulWidget {
+class FinanceDashboard extends ConsumerWidget {
   const FinanceDashboard({super.key});
 
   @override
-  State<FinanceDashboard> createState() => _FinanceDashboardState();
-}
-
-class _FinanceDashboardState extends State<FinanceDashboard> {
-  int _selectedIndex = 0;
-
-  static const List<Widget> _widgetOptions = <Widget>[
-    BudgetScreen(),
-    TransactionScreen(),
-    AnalyticsScreen(),
-    InsightsScreen(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authNotifier = ref.watch(authNotifierProvider.notifier);
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet),
-            label: 'Budget',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Transactions',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Analytics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb),
-            label: 'Insights',
-          ),
+      appBar: AppBar(
+        title: const Text('Finance Dashboard'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              authNotifier.signOut();
+            },
+            icon: const Icon(Icons.logout),
+          )
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+      ),
+      body: const Center(
+        child: Text('Welcome to your finance dashboard!'),
       ),
     );
   }

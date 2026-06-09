@@ -3,14 +3,14 @@ import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationService {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final LocalAuthentication _localAuth = LocalAuthentication();
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
       final UserCredential userCredential =
-          await _firebaseAuth.signInWithEmailAndPassword(
+          await firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -25,7 +25,7 @@ class AuthenticationService {
       String email, String password) async {
     try {
       final UserCredential userCredential =
-          await _firebaseAuth.createUserWithEmailAndPassword(
+          await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -37,11 +37,11 @@ class AuthenticationService {
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
+    await firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
   Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+    await firebaseAuth.signOut();
   }
 
   Future<bool> authenticateWithBiometrics() async {

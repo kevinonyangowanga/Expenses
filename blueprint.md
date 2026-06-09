@@ -1,3 +1,4 @@
+
 # Project Blueprint
 
 ## Overview
@@ -10,13 +11,20 @@ This is a financial tracking and budgeting application built with Flutter and Ri
 
 ## Features
 
-- **User Authentication:** Users can sign up, log in, and log out of the application.
-- **Transaction Management:** Users can add, edit, and delete transactions. I have created a transaction model, a notifier to manage the state of the transactions, and screens for adding and editing transactions. 
-- **Category Management:** Users can create, view, and delete their own custom categories.
+- **Authentication:** Users can create an account and log in using email and password, with biometric authentication as an alternative.
+- **Finance Dashboard:** A central dashboard to view financial summaries.
+- **Transaction Management:** Users can add, edit, and delete income and expense transactions.
 - **Budgeting:** Users can create and manage budgets for different spending categories.
-- **Spending Analysis:** The application provides a visual summary of the user's spending habits with a pie chart.
-- **Budget Warnings:** The application warns users when a transaction exceeds their budget for a particular category.
-- **Data Persistence:** The application uses Firebase Firestore to store the user's data, including transactions, categories, and budgets. This ensures that the user's data is saved even when the application is closed.
 - **Search Functionality:** Users can search for transactions by title in the finance dashboard.
 - **Reports Screen:** A new screen that provides users with a summary of their spending habits over a selected period of time.
 - **Spending Bar Chart:** The "Reports" screen includes a bar chart that shows the user's spending by category.
+
+## Premium Features
+
+- **Financial Goals:** Users can set and track their financial goals.
+- **Debt Tracking:** Users can track their debts and create a plan to pay them off.
+- **Investment Tracking:** Users can track their investments and monitor their performance.
+- **Net Worth Dashboard:** A dashboard that provides a complete overview of the user's net worth.
+- **Subscription Management:** Users can track their subscriptions and get reminders for upcoming payments.
+- **Premium UI Design:** A more polished and modern user interface.
+- **Upgrade Screen:** A screen that allows users to upgrade to the premium version of the app.
