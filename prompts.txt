@@ -1,43 +1,3 @@
-If you're building with Flutter and using AI to generate screens/features incrementally, the best approach is to give the AI **focused follow-up prompts** rather than asking for the entire app at once.
-
-Here are high-quality follow-up prompts you can use:
-
----
-
-## 1. Dashboard Screen
-
-> Create a Flutter dashboard screen for a personal finance app using Material 3. The dashboard should include:
->
-> * App bar with user greeting
-> * Total balance card
-> * Income, expenses, and savings summary cards
-> * Monthly budget progress indicator
-> * Spending insights section
-> * Recent transactions list
-> * Responsive layout for mobile and tablet
-> * Clean fintech-inspired UI
->
-> Use reusable widgets and mock data.
-
----
-
-## 2. Transaction Management
-
-> Create a complete transaction management feature in Flutter.
->
-> Requirements:
->
-> * Add transaction screen
-> * Edit transaction screen
-> * Delete transaction functionality
-> * Category selection dropdown
-> * Date picker
-> * Amount input with validation
-> * Notes field
-> * State management using Riverpod
-> * Clean architecture folder structure
-
----
 
 ## 3. Spending Categories
 
@@ -248,3 +208,16 @@ Here are high-quality follow-up prompts you can use:
 > Return complete code without placeholders.
 
 This last prompt is particularly useful because it pushes the AI to generate code that's much closer to production quality rather than a quick prototype.
+
+
+
+To initialize Firebase, call Firebase.initializeApp from the firebase_core package with the configuration from your new firebase_options.dart file:
+
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+// ...
+
+await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
